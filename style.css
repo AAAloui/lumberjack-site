@@ -1,0 +1,95 @@
+/* Mirrors app/src/main/java/com/lumberjack/workout/ui/theme (Color.kt, Type.kt, Shape.kt). */
+
+@font-face { font-family: "Barlow Condensed"; font-weight: 600; font-display: swap; src: url("fonts/barlow_condensed_semibold.ttf") format("truetype"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 700; font-display: swap; src: url("fonts/barlow_condensed_bold.ttf") format("truetype"); }
+@font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url("fonts/instrument_sans_variable.ttf") format("truetype"); }
+
+/* Dark scheme (default): Char / Graphite / Ash / Bone / Stone / BronzeAccent */
+:root {
+  --bg: #121110;
+  --surface: #1b1917;
+  --outline: #2e2a26;
+  --text: #efeae1;
+  --muted: #a8a093;
+  --accent: #d9a566;
+  --on-accent: #121110;
+  --gradient: linear-gradient(135deg, #ebc08a, #cf9758, #b8783a);
+  color-scheme: dark;
+}
+
+/* Light scheme: Paper / LightCard / LightBorder / TextPrimaryLight / BronzeDeep */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f4f0e8;
+    --surface: #fbf9f4;
+    --outline: #ddd6c9;
+    --text: #1b1917;
+    --muted: #6b645a;
+    --accent: #8a5a2b;
+    color-scheme: light;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 16px/1.5 "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+main, header, footer { max-width: 640px; margin: 0 auto; padding: 0 24px; }
+
+a { color: var(--accent); }
+
+/* BrandHeader: mark + wordmark */
+header { display: flex; align-items: center; gap: 10px; padding-top: 24px; }
+.mark { width: 26px; height: 26px; }
+.mark .rings { stroke: var(--text); }
+.wordmark { font: 700 17px/1 "Barlow Condensed", sans-serif; letter-spacing: 1.4px; }
+
+/* Hero: displayLarge */
+.hero { padding: 72px 0 40px; }
+h1 {
+  font: 700 clamp(40px, 9vw, 56px)/1.05 "Barlow Condensed", sans-serif;
+  letter-spacing: -0.5px;
+  margin: 0 0 16px;
+}
+.lede { color: var(--muted); font-size: 18px; margin: 0; max-width: 32em; }
+
+/* StartWorkoutCard: bronze gradient, 20px corners */
+.cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 96px; padding: 0 24px; margin: 0 0 56px;
+  border-radius: 20px; background: var(--gradient); color: #121110;
+}
+.cta strong { display: block; font: 700 28px/1 "Barlow Condensed", sans-serif; letter-spacing: 0.56px; }
+.cta span { font-weight: 500; font-size: 15px; }
+.cta .play {
+  flex: none; display: grid; place-items: center;
+  width: 48px; height: 48px; border-radius: 50%; background: #121110;
+}
+
+/* Feature rows: cards with outline, 16px corners */
+h2 {
+  font: 600 13px/1 "Instrument Sans", sans-serif;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 12px;
+}
+.features { list-style: none; padding: 0; margin: 0 0 64px; display: grid; gap: 8px; }
+.features li {
+  background: var(--surface); border: 1px solid var(--outline); border-radius: 16px;
+  padding: 16px 20px;
+}
+.features b { display: block; font: 600 18px/24px "Barlow Condensed", sans-serif; }
+.features span { color: var(--muted); font-size: 14px; }
+
+footer {
+  display: flex; flex-wrap: wrap; gap: 8px 16px;
+  padding-top: 24px; padding-bottom: 40px;
+  border-top: 1px solid var(--outline);
+  color: var(--muted); font-size: 13px;
+}
+footer a { color: var(--muted); }
