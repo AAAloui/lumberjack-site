@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support · Lumberjack</title>
+  <meta name="description" content="Get help with Lumberjack: sync, restoring data, subscriptions, account deletion and bug reports.">
+  <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f0e8" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <a href="/" aria-label="Lumberjack home">
+    <svg class="mark" viewBox="20 20 68 68" aria-hidden="true">
+      <circle cx="54" cy="54" r="7.14" fill="#d9a566"/>
+      <g class="rings" fill="none" stroke-width="5">
+        <path d="M69 28.02A30 30 0 1 1 28.78 37.75"/>
+        <path d="M37.92 44.71A18.57 18.57 0 1 1 46.33 70.91"/>
+      </g>
+    </svg>
+    <span class="wordmark">LUMBERJACK</span>
+  </a>
+</header>
+
+<main class="doc">
+  <h1>Support</h1>
+  <p class="meta">Questions, problems or feedback? Email {{CONTACT_EMAIL}}.</p>
+
+  <h2>Common questions</h2>
+  <div class="faq">
+    <details>
+      <summary>How does sync between my phone and watch work?</summary>
+      <p>Your phone and watch exchange routines and workouts directly over Google's Wearable Data Layer. Keep both devices paired and the app installed on each. Like logging and syncing on the phone, the watch app needs an active trial or a purchase.</p>
+      <!-- TODO(maintainer): add troubleshooting steps for stuck watch sync once confirmed against app/src/main/java/com/lumberjack/workout/data/sync/. -->
+    </details>
+    <details>
+      <summary>How do I restore my data on a new phone?</summary>
+      <p>Install Lumberjack and sign in with the same account (Google, or email and password). Your workouts, routines and records are restored from your synced backup. This only works if backup and sync was on in Profile on your old phone; data kept only on a device can't be recovered once it is lost.</p>
+    </details>
+    <details>
+      <summary>How do I cancel my subscription?</summary>
+      <p>Subscriptions are managed by Google Play, not by us. To cancel:</p>
+      <ol>
+        <li>Open Google Play and tap your profile picture.</li>
+        <li>Go to Payments &amp; subscriptions, then Subscriptions.</li>
+        <li>Choose Lumberjack and tap Cancel subscription.</li>
+      </ol>
+      <p>Cancelling stops the next renewal; access continues until the end of the paid period. Deleting your account does not cancel a subscription.</p>
+    </details>
+    <details>
+      <summary>How do I delete my account?</summary>
+      <p>In the app, go to Profile and choose Delete account. You can also do it from the web, without the app installed, at <a href="/delete-account">lumberjack.fit/delete-account</a>. If you can't sign in, email us from the address on your account.</p>
+    </details>
+    <details>
+      <summary>How do I report a bug?</summary>
+      <p>Email {{CONTACT_EMAIL}} with what happened, what you expected, your phone and watch model, and your Android and app versions. Crash reports are sent automatically; screenshots help for anything else.</p>
+    </details>
+  </div>
+
+  <h2>More</h2>
+  <p>See our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</p>
+</main>
+
+<footer>
+  <span>&copy; 2026 Lumberjack</span>
+  <nav aria-label="Legal and support">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/support">Support</a>
+    <a href="/delete-account">Delete account</a>
+  </nav>
+</footer>
+</body>
+</html>

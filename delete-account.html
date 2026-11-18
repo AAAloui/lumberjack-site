@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delete your account · Lumberjack</title>
+  <meta name="description" content="Delete your Lumberjack account and all its data, without needing the app installed.">
+  <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f0e8" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <a href="/" aria-label="Lumberjack home">
+    <svg class="mark" viewBox="20 20 68 68" aria-hidden="true">
+      <circle cx="54" cy="54" r="7.14" fill="#d9a566"/>
+      <g class="rings" fill="none" stroke-width="5">
+        <path d="M69 28.02A30 30 0 1 1 28.78 37.75"/>
+        <path d="M37.92 44.71A18.57 18.57 0 1 1 46.33 70.91"/>
+      </g>
+    </svg>
+    <span class="wordmark">LUMBERJACK</span>
+  </a>
+</header>
+
+<main class="doc">
+  <h1>Delete your account</h1>
+  <p>This permanently deletes your Lumberjack account: your workouts, routines, records, synced backup and your sign-in. It can't be undone. It's the same as <em>Profile &rarr; Delete account</em> in the app, and you don't need the app installed.</p>
+  <p class="muted">A subscription isn't cancelled by deleting your account. Cancel it in Google Play under Payments &amp; subscriptions. Data that only exists on a phone where the app is still installed is removed when you delete the account in the app or uninstall it.</p>
+
+  <section id="signin" class="panel">
+    <strong>1. Sign in to confirm it's you</strong>
+    <button id="google" class="btn" type="button">Continue with Google</button>
+    <form id="email-form">
+      <label for="email">Or with your email and password</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@email.com" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+  </section>
+
+  <section id="confirm" class="panel hidden">
+    <strong>2. Delete <span id="who"></span></strong>
+    <p>Type <code>DELETE</code> to confirm.</p>
+    <label for="confirm-text">Confirmation</label>
+    <input id="confirm-text" autocomplete="off">
+    <button id="delete" class="btn danger" type="button" disabled>Delete my account permanently</button>
+  </section>
+
+  <p id="status" role="status"></p>
+  <p class="muted">Can't sign in? Email {{CONTACT_EMAIL}} from the address on your account and we'll delete it within 30 days.</p>
+</main>
+
+<footer>
+  <span>&copy; 2026 Lumberjack</span>
+  <nav aria-label="Legal and support">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/support">Support</a>
+    <a href="/delete-account">Delete account</a>
+  </nav>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { getFirestore, collection, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  // TODO(maintainer): paste the Web app config from Firebase console -> Project settings -> Your apps -> Web app.
+  // TODO(maintainer): add lumberjack.fit in Firebase Console -> Authentication -> Settings -> Authorized domains,
+  // or sign-in on this page will fail (auth/unauthorized-domain).
+  const firebaseConfig = {
+    apiKey: "{{WEB_API_KEY}}",
+    authDomain: "lumberjack-b2771.firebaseapp.com",
+    projectId: "lumberjack-b2771",
+    appId: "{{WEB_APP_ID}}"
+  };
+  // Keep in step with FirestoreUserDataEraser.USER_COLLECTIONS in the app.
+  const USER_COLLECTIONS = [
+    "workouts", "exercises", "workoutExercises", "workoutSets",
+    "templates", "templateExercises", "templateSets",
+    "restTimers", "personalRecords", "settings", "entitlement"
+  ];
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const status = (text) => { document.getElementById("status").textContent = text; };
+
+  function signedIn(user) {
+    document.getElementById("signin").classList.add("hidden");
+    document.getElementById("confirm").classList.remove("hidden");
+    document.getElementById("who").textContent = user.email || "this account";
+    status("");
+  }
+
+  document.getElementById("google").addEventListener("click", async () => {
+    try { signedIn((await signInWithPopup(auth, new GoogleAuthProvider())).user); }
+    catch (e) { status("Google sign-in didn't complete. Nothing was deleted."); }
+  });
+
+  document.getElementById("email-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      signedIn((await signInWithEmailAndPassword(auth, email, document.getElementById("password").value)).user);
+    } catch (e) { status("That email and password didn't match an account. Nothing was deleted."); }
+  });
+
+  const confirmInput = document.getElementById("confirm-text");
+  const deleteButton = document.getElementById("delete");
+  confirmInput.addEventListener("input", () => { deleteButton.disabled = confirmInput.value.trim() !== "DELETE"; });
+
+  deleteButton.addEventListener("click", async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    deleteButton.disabled = true;
+    status("Deleting…");
+    try {
+      const root = doc(db, "users", user.uid);
+      for (const name of USER_COLLECTIONS) {
+        const snapshot = await getDocs(collection(root, name));
+        for (let i = 0; i < snapshot.docs.length; i += 400) {
+          const batch = writeBatch(db);
+          snapshot.docs.slice(i, i + 400).forEach((d) => batch.delete(d.ref));
+          await batch.commit();
+        }
+      }
+      await deleteDoc(root);
+      await user.delete();
+      document.getElementById("confirm").classList.add("hidden");
+      status("Your account and its data have been deleted.");
+    } catch (e) {
+      deleteButton.disabled = false;
+      status("Something went wrong (" + (e.code || e.message) + "). Try again, or email us.");
+    }
+  });
+</script>
+</body>
+</html>
