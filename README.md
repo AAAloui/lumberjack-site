@@ -1,6 +1,24 @@
 # lumberjack-site
 
-Static landing page for the Lumberjack workout app, served by GitHub Pages.
+Static website for the Lumberjack workout app, served by GitHub Pages at https://lumberjack.fit.
+
+| Page | URL | Purpose |
+| --- | --- | --- |
+| `index.html` | `/` | Landing page |
+| `privacy.html` | `/privacy` | Privacy Policy (Play Console privacy policy URL) |
+| `terms.html` | `/terms` | Terms of Service |
+| `support.html` | `/support` | Support contact and FAQ |
+| `delete-account.html` | `/delete-account` | Web account deletion (Play Console account deletion URL) |
+| `404.html` | n/a | Not-found page, served automatically by GitHub Pages |
+
+Link between pages with extensionless paths (`/privacy`) so URLs stay stable.
+
+## Before going live
+
+Fill the placeholders: `{{OPERATOR_NAME}}`, `{{CONTACT_EMAIL}}`, `{{EFFECTIVE_DATE}}` and
+`{{GOVERNING_LAW}}` in the legal and support pages, and `{{WEB_API_KEY}}` and `{{WEB_APP_ID}}` in
+`delete-account.html`. Search for `TODO(maintainer)` too. `lumberjack.fit` must also be added to
+Firebase Console → Authentication → Settings → Authorized domains, or sign-in on the delete page fails.
 
 Plain HTML + CSS, no build step. Colors, type and corner radii mirror the app's theme
 (`app/src/main/java/com/lumberjack/workout/ui/theme` in the app repo), with dark as the default
