@@ -69,14 +69,15 @@
   import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
   import { getFirestore, collection, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-  // TODO(maintainer): paste the Web app config from Firebase console -> Project settings -> Your apps -> Web app.
+  // Web app config from Firebase console -> Project settings -> Your apps -> Web app. Only Auth and
+  // Firestore are used here; no Analytics (the privacy policy only allows it with consent, in the app).
   // TODO(maintainer): add lumberjack.fit in Firebase Console -> Authentication -> Settings -> Authorized domains,
   // or sign-in on this page will fail (auth/unauthorized-domain).
   const firebaseConfig = {
-    apiKey: "{{WEB_API_KEY}}",
+    apiKey: "AIzaSyCYKPn02hemDlw-6VjfkGz2KMJ2ee0MkJs",
     authDomain: "lumberjack-b2771.firebaseapp.com",
     projectId: "lumberjack-b2771",
-    appId: "{{WEB_APP_ID}}"
+    appId: "1:98446215369:web:711ae7228de0800b196518"
   };
   // Keep in step with FirestoreUserDataEraser.USER_COLLECTIONS in the app.
   const USER_COLLECTIONS = [

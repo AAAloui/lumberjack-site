@@ -24,7 +24,7 @@ Link between pages with extensionless paths (`/privacy`) so URLs stay stable.
 ## Before going live
 
 Fill the placeholders: `{{OPERATOR_NAME}}`, `{{EFFECTIVE_DATE}}` and `{{GOVERNING_LAW}}` in the
-legal pages, and `{{WEB_API_KEY}}` and `{{WEB_APP_ID}}` in `delete-account.html`. Search for `TODO(maintainer)` too. `lumberjack.fit` must also be added to
+legal pages. The Firebase web config in `delete-account.html` is already filled in. Search for `TODO(maintainer)` too. `lumberjack.fit` must also be added to
 Firebase Console → Authentication → Settings → Authorized domains, or sign-in on the delete page fails.
 
 Plain HTML + CSS, no build step. Colors, type and corner radii mirror the app's theme
