@@ -55,12 +55,15 @@
   <ul>
     <li>Turn usage analytics on or off at any time in Profile.</li>
     <li>Turn backup and sync off in Profile; your data then stays on your device.</li>
-    <li>Delete your account and all associated data from Profile in the app, or from the web at <a href="/delete-account">lumberjack.fit/delete-account</a>. This removes your local data, your synced data in Firestore, and your sign-in account. Purchase records kept by Google Play and RevenueCat for legal and accounting reasons are subject to their own retention.</li>
+    <li>Delete your account and all associated data from Profile in the app, or from the web at <a href="/delete-account">lumberjack.fit/delete-account</a>. This removes your local data, your synced data in Firestore, and your sign-in account. If you delete it from the web, a phone that still has the app removes its local copy of that account the next time it is online. Purchase records kept by Google Play and RevenueCat for legal and accounting reasons are subject to their own retention.</li>
     <li>Depending on where you live, you may have the right to access, correct, export or delete your data, and to complain to your data protection authority. Contact us at <a href="mailto:privacy@lumberjack.fit">privacy@lumberjack.fit</a>.</li>
   </ul>
 
   <h2>Retention</h2>
   <p>We keep your data while your account exists. When you delete your account, synced data and the sign-in account are deleted right away; backups held by our providers expire on their own schedules.</p>
+  <p>After a deletion we keep a record containing only the deleted account's internal ID and the time of deletion, so your other devices know the account was deleted. It contains no email address or other personal details.</p>
+  <!-- TODO(maintainer): decide how long deletedAccounts/{uid} records are kept (and clean them up), then state that period here. -->
+
 
   <h2>Children</h2>
   <p>The app is not directed at children under 16 and we do not knowingly collect their data.</p>

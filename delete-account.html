@@ -27,7 +27,17 @@
 <main class="doc">
   <h1>Delete your account</h1>
   <p>This permanently deletes your Lumberjack account: your workouts, routines, records, synced backup and your sign-in. It can't be undone. It's the same as <em>Profile &rarr; Delete account</em> in the app, and you don't need the app installed.</p>
-  <p class="muted">A subscription isn't cancelled by deleting your account. Cancel it in Google Play under Payments &amp; subscriptions. Data that only exists on a phone where the app is still installed is removed when you delete the account in the app or uninstall it.</p>
+  <p class="muted">A subscription isn't cancelled by deleting your account. Cancel it in Google Play under Payments &amp; subscriptions.</p>
+
+  <!-- TODO(maintainer): publish this section only once the app release with deleted-account handling is live; add its version number here if useful. -->
+  <h2>Phones that still have the app</h2>
+  <ul>
+    <li>Deleting here removes your synced data and your sign-in right away. A phone that still has the app keeps its local copy until it is online again.</li>
+    <li>The next time that phone is online (when you open the app, return to it, or sign in), the app checks whether the account still exists. If it doesn't, the app removes that account's workouts, routines, records and settings from the phone, signs out, and shows "This account was deleted."</li>
+    <li>While the phone is offline, you can still sign in there and see the local copy. Nothing is removed until the phone is back online and the check succeeds; if it can't reach our servers, it tries again later.</li>
+    <li>If the app asks you to sign in again, that's how it confirms the account is gone.</li>
+    <li>Signing in again later with the same Google account creates a new, empty account. Deleted data can't be brought back.</li>
+  </ul>
 
   <section id="signin" class="panel">
     <strong>1. Sign in to confirm it's you</strong>
@@ -67,7 +77,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import { getFirestore, collection, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, collection, doc, getDocs, writeBatch, deleteDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   // Web app config from Firebase console -> Project settings -> Your apps -> Web app. Only Auth and
   // Firestore are used here; no Analytics (the privacy policy only allows it with consent, in the app).
@@ -131,7 +141,16 @@
         }
       }
       await deleteDoc(root);
-      await user.delete();
+      // Tombstone: tells phones that still have the account it was deleted (they wipe it once online).
+      // Best-effort; removed again if deleting the sign-in fails, so a live account never looks deleted.
+      const tombstone = doc(db, "deletedAccounts", user.uid);
+      const marked = await setDoc(tombstone, { deletedAt: serverTimestamp() }).then(() => true, () => false);
+      try {
+        await user.delete();
+      } catch (e) {
+        if (marked) await deleteDoc(tombstone).catch(() => {});
+        throw e;
+      }
       document.getElementById("confirm").classList.add("hidden");
       status("Your account and its data have been deleted.");
     } catch (e) {
