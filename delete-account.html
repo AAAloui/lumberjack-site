@@ -77,7 +77,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-  import { getFirestore, collection, doc, getDocs, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  import { getFirestore, collection, doc, getDocs, writeBatch, deleteDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
   // Web app config from Firebase console -> Project settings -> Your apps -> Web app. Only Auth and
   // Firestore are used here; no Analytics (the privacy policy only allows it with consent, in the app).
@@ -141,7 +141,16 @@
         }
       }
       await deleteDoc(root);
-      await user.delete();
+      // Tombstone: tells phones that still have the account it was deleted (they wipe it once online).
+      // Best-effort; removed again if deleting the sign-in fails, so a live account never looks deleted.
+      const tombstone = doc(db, "deletedAccounts", user.uid);
+      const marked = await setDoc(tombstone, { deletedAt: serverTimestamp() }).then(() => true, () => false);
+      try {
+        await user.delete();
+      } catch (e) {
+        if (marked) await deleteDoc(tombstone).catch(() => {});
+        throw e;
+      }
       document.getElementById("confirm").classList.add("hidden");
       status("Your account and its data have been deleted.");
     } catch (e) {
