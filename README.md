@@ -13,11 +13,18 @@ Static website for the Lumberjack workout app, served by GitHub Pages at https:/
 
 Link between pages with extensionless paths (`/privacy`) so URLs stay stable.
 
+## Contact addresses
+
+| Address | Where |
+| --- | --- |
+| `privacy@lumberjack.fit` | `privacy.html` (data rights requests, Contact section) |
+| `support@lumberjack.fit` | `terms.html`, `support.html`, `delete-account.html` (fallback for people who can't sign in) |
+| `info@lumberjack.fit` | Footer on every page (general inquiries) |
+
 ## Before going live
 
-Fill the placeholders: `{{OPERATOR_NAME}}`, `{{CONTACT_EMAIL}}`, `{{EFFECTIVE_DATE}}` and
-`{{GOVERNING_LAW}}` in the legal and support pages, and `{{WEB_API_KEY}}` and `{{WEB_APP_ID}}` in
-`delete-account.html`. Search for `TODO(maintainer)` too. `lumberjack.fit` must also be added to
+Fill the placeholders: `{{OPERATOR_NAME}}`, `{{EFFECTIVE_DATE}}` and `{{GOVERNING_LAW}}` in the
+legal pages, and `{{WEB_API_KEY}}` and `{{WEB_APP_ID}}` in `delete-account.html`. Search for `TODO(maintainer)` too. `lumberjack.fit` must also be added to
 Firebase Console → Authentication → Settings → Authorized domains, or sign-in on the delete page fails.
 
 Plain HTML + CSS, no build step. Colors, type and corner radii mirror the app's theme

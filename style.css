@@ -116,7 +116,7 @@ footer nav { display: flex; flex-wrap: wrap; gap: 8px 16px; }
 .doc a { overflow-wrap: anywhere; }
 
 /* Cards: data tables, FAQ entries and form panels */
-.cards { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 8px; }
+.cards, .doc .cards { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 8px; }
 .cards li, .panel, .doc details {
   background: var(--surface); border: 1px solid var(--outline); border-radius: 16px;
   padding: 16px 20px; max-width: none; margin: 0;
